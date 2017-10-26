@@ -6,6 +6,10 @@ There are 3 paramaters in the configuration of the Doctrine encryption bundle wh
     * 32 character long string
     * Default: empty, the bundle will use your Symfony2 secret key.
 
+* **encrypted_suffix** - The suffix to add to the end of encrypted strings
+    * any string which won't likely occur in the encrypted data
+    * Default: <ENC>
+
 * **encryptor** - The encryptor used to encrypt the data
     * Encryptor name, currently available: AES-192 and AES-256
     * Default: AES-256
@@ -19,6 +23,7 @@ There are 3 paramaters in the configuration of the Doctrine encryption bundle wh
 ``` yaml
 ambta_doctrine_encrypt:
     secret_key:           AB1CD2EF3GH4IJ5KL6MN7OP8QR9ST0UW # Your own random 256 bit key (32 characters)
+    encrypted_suffix:     <ENC> # or any other string that you wish that won't cause issues with your DB
     encryptor:            AES-256 # AES-256 or AES-192
     encryptor_class:      \Ambta\DoctrineEncryptBundle\Encryptors\AES256Encryptor # your own encryption class
 ```
@@ -29,6 +34,8 @@ ambta_doctrine_encrypt:
 <ambta_doctrine_encrypt:config>
         <!-- Your own random 256 bit key (32 characters) -->
         <ambta_doctrine_encrypt:secret_key>AB1CD2EF3GH4IJ5KL6MN7OP8QR9ST0UW</ambta_doctrine_encrypt:secret_key>
+        <!-- <ENC> or any other string that you wish that won't cause issues with your DB -->
+        <ambta_doctrine_encrypt:encrypted_suffix><![CDATA[<ENC>]]></ambta_doctrine_encrypt:secret_key>
         <!-- AES-256 or AES-192 -->
         <ambta_doctrine_encrypt:encryptor>AES-256</ambta_doctrine_encrypt:encryptor>
         <!-- your own encryption class -->

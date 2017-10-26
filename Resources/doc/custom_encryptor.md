@@ -1,8 +1,9 @@
+
 # Customer encryption class
 
 We can imagine that you want to use your own encryption class, it is simpel.
 
-### Warning: make sure you add the `<ENC>` after your encrypted string.
+### Warning: make sure you add the encryption suffix after your encrypted string.
 
 1. Create an new class and implement Ambta\DoctrineEncryptBundle\Encryptors\EncryptorInterface.
 2. Create a constructor with the parameter secret key `__construct($secretKey)`
@@ -38,6 +39,11 @@ class MyAES128Encryptor implements EncryptorInterface
     /**
      * @var string
      */
+    private $suffix;
+
+    /**
+     * @var string
+     */
     private $encryptMethod;
 
     /**
@@ -48,9 +54,10 @@ class MyAES128Encryptor implements EncryptorInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct($key)
+    public function __construct($key, $suffix)
     {
         $this->secretKey = md5($key);
+        $this->suffix = $suffix;
         $this->encryptMethod = sprintf('%s-%s', self::ENCRYPT_NAME, self::ENCRYPT_MODE);
         $this->initializationVector = openssl_random_pseudo_bytes(
             openssl_cipher_iv_length($this->encryptMethod)
@@ -69,7 +76,7 @@ class MyAES128Encryptor implements EncryptorInterface
                 $this->secretKey,
                 0,
                 $this->initializationVector
-            ))).'<ENC>';
+            ))).$this->suffix;
         }
 
         return $data;
@@ -81,7 +88,7 @@ class MyAES128Encryptor implements EncryptorInterface
     public function decrypt($data)
     {
         if (is_string($data)) {
-            $data = str_replace('<ENC>', '', $data);
+            $data = str_replace($this->suffix, '', $data);
 
             return trim(openssl_decrypt(
                 base64_decode($data),

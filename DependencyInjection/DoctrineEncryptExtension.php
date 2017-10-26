@@ -47,6 +47,12 @@ class DoctrineEncryptExtension extends Extension
             }
         }
 
+        //If no encryption suffix then set the default
+        if (empty($config['encrypted_suffix'])) {
+            $config['encrypted_suffix'] = '<ENC>';
+        }
+
+
         //If empty encryptor class, use Rijndael 256 encryptor
         if (empty($config['encryptor_class'])) {
             if (isset($config['encryptor']) and isset($supportedEncryptorClasses[$config['encryptor']])) {

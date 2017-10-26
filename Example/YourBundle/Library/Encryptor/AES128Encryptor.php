@@ -18,6 +18,11 @@ class AES128Encryptor implements EncryptorInterface
     /**
      * @var string
      */
+    private $suffix;
+
+    /**
+     * @var string
+     */
     private $encryptMethod;
 
     /**
@@ -28,9 +33,10 @@ class AES128Encryptor implements EncryptorInterface
     /**
      * {@inheritdoc}
      */
-    public function __construct($key)
+    public function __construct($key, $suffix)
     {
         $this->secretKey = md5($key);
+        $this->suffix = $suffix;
         $this->encryptMethod = sprintf('%s-%s', self::ENCRYPT_NAME, self::ENCRYPT_MODE);
         $this->initializationVector = openssl_random_pseudo_bytes(
             openssl_cipher_iv_length($this->encryptMethod)
@@ -49,7 +55,7 @@ class AES128Encryptor implements EncryptorInterface
                 $this->secretKey,
                 0,
                 $this->initializationVector
-            ))).'<ENC>';
+            ))).$this->suffix;
         }
 
         return $data;
@@ -61,7 +67,7 @@ class AES128Encryptor implements EncryptorInterface
     public function decrypt($data)
     {
         if (is_string($data)) {
-            $data = str_replace('<ENC>', '', $data);
+            $data = str_replace($this->suffix, '', $data);
 
             return trim(openssl_decrypt(
                 base64_decode($data),

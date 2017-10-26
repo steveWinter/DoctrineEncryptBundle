@@ -19,14 +19,20 @@ class VariableEncryptor implements EncryptorInterface
     /**
      * @var string
      */
+    private $suffix;
+
+    /**
+     * @var string
+     */
     private $initializationVector;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct($key)
+    public function __construct($key, $suffix)
     {
         $this->secretKey = md5($key);
+        $this->suffix = $suffix;
         $this->initializationVector = openssl_random_pseudo_bytes(
             openssl_cipher_iv_length(self::ENCRYPT_METHOD)
         );
@@ -44,7 +50,7 @@ class VariableEncryptor implements EncryptorInterface
                 $this->secretKey,
                 0,
                 $this->initializationVector
-            ))).'<ENC>';
+            ))).$this->suffix;
         }
 
         /*
@@ -66,7 +72,7 @@ class VariableEncryptor implements EncryptorInterface
     public function decrypt($data)
     {
         if (is_string($data)) {
-            $data = str_replace('<ENC>', '', $data);
+            $data = str_replace($this->suffix, '', $data);
 
             return trim(openssl_decrypt(
                 base64_decode($data),
