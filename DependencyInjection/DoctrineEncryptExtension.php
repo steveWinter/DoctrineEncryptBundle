@@ -65,6 +65,7 @@ class DoctrineEncryptExtension extends Extension
         //Set parameters
         $container->setParameter('ambta_doctrine_encrypt.encryptor_class_name', $config['encryptor_class']);
         $container->setParameter('ambta_doctrine_encrypt.secret_key', $config['secret_key']);
+        $container->setParameter('ambta_doctrine_encrypt.encrypted_suffix', $config['encrypted_suffix']);
 
         //Load service file
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
