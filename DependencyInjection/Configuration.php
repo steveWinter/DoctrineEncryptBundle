@@ -20,13 +20,20 @@ class Configuration implements ConfigurationInterface {
     public function getConfigTreeBuilder() {
 
         //Create tree builder
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ambta_doctrine_encrypt');
+        if (method_exists(TreeBuilder::class, 'getRootNode')) {
+            $treeBuilder = new TreeBuilder('ambta_doctrine_encrypt');
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $treeBuilder = new TreeBuilder();
+            $rootNode = $treeBuilder->root('ambta_doctrine_encrypt');
+        }
 
         // Grammar of config tree
         $rootNode
                 ->children()
                     ->scalarNode('secret_key')
+                    ->end()
+                    ->scalarNode('encrypted_suffix')
                     ->end()
                     ->scalarNode('encryptor')
                     ->end()

@@ -13,12 +13,12 @@ class Encryptor
     /** @var \Ambta\DoctrineEncryptBundle\Encryptors\EncryptorInterface */
     protected $encryptor;
 
-    public function __construct($encryptName, $key)
+    public function __construct($encryptName, $key, $suffix)
     {
 
         $reflectionClass = new \ReflectionClass($encryptName);
         $this->encryptor = $reflectionClass->newInstanceArgs( array(
-            $key
+            $key, $suffix
         ));
     }
 
