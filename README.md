@@ -12,11 +12,11 @@ More about us can be found on our website. [Ambta.com](https://ambta.com)
 
 ### What does it do exactly
 
-It gives you the opportunity to add the @Encrypt annotation above each string property
+It gives you the opportunity to add the @Encrypted annotation above each string property
 
 ```php
 /**
- * @Encrypt
+ * @Encrypted
  */
 protected $username;
 ```
