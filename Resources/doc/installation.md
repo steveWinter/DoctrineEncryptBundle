@@ -1,4 +1,4 @@
-#Installation
+# Installation
 
 1. Download AmbtaDoctrineEncryptBundle using composer
 2. Enable the database encryption bundle
