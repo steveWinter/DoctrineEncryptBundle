@@ -13,7 +13,7 @@ interface EncryptorInterface {
      * Must accept secret key for encryption
      * @param string $secretKey the encryption key
      */
-    public function __construct($secretKey);
+    public function __construct($secretKey, $suffix);
 
     /**
      * @param string $data Plain text to encrypt

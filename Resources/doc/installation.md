@@ -1,4 +1,4 @@
-#Installation
+# Installation
 
 1. Download AmbtaDoctrineEncryptBundle using composer
 2. Enable the database encryption bundle
@@ -7,7 +7,7 @@
 ### Requirements
 
 * php 5.4 
-* php-mcrypt
+* php-openssl
 * [doctrine/orm](https://packagist.org/packages/doctrine/orm) >= 2.5
 * [symfony/framework-bundle](https://packagist.org/packages/symfony/framework-bundle) >= 2.0
 
@@ -18,7 +18,7 @@ AmbtaDoctrineEncryptBundle should be installed usin [Composer](http://getcompose
 ``` js
 {
     "require": {
-        "ambta/doctrine-encrypt-bundle": "2.4.*"
+        "ambta/doctrine-encrypt-bundle": "^2.5"
     }
 }
 ```

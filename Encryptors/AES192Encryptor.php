@@ -3,13 +3,14 @@
 namespace Ambta\DoctrineEncryptBundle\Encryptors;
 
 /**
- * Class for variable encryption.
+ * Class for AES256 encryption.
  *
  * @author Victor Melnik <melnikvictorl@gmail.com>
  */
-class VariableEncryptor implements EncryptorInterface
+class AES192Encryptor implements EncryptorInterface
 {
-    const ENCRYPT_METHOD = 'AES-256-ECB';
+    const METHOD_NAME = 'AES-192';
+    const ENCRYPT_MODE = 'ECB';
 
     /**
      * @var string
@@ -24,6 +25,11 @@ class VariableEncryptor implements EncryptorInterface
     /**
      * @var string
      */
+    private $encryptMethod;
+
+    /**
+     * @var string
+     */
     private $initializationVector;
 
     /**
@@ -33,8 +39,9 @@ class VariableEncryptor implements EncryptorInterface
     {
         $this->secretKey = md5($key);
         $this->suffix = $suffix;
+        $this->encryptMethod = sprintf('%s-%s', self::METHOD_NAME, self::ENCRYPT_MODE);
         $this->initializationVector = openssl_random_pseudo_bytes(
-            openssl_cipher_iv_length(self::ENCRYPT_METHOD)
+            openssl_cipher_iv_length($this->encryptMethod)
         );
     }
 
@@ -46,21 +53,11 @@ class VariableEncryptor implements EncryptorInterface
         if (is_string($data)) {
             return trim(base64_encode(openssl_encrypt(
                 $data,
-                self::ENCRYPT_METHOD,
+                $this->encryptMethod,
                 $this->secretKey,
                 0,
                 $this->initializationVector
             ))).$this->suffix;
-        }
-
-        /*
-         * Use ROT13 which is an simple letter substitution cipher with some additions
-         * Not the safest option but it makes it alot harder for the attacker
-         *
-         * Not used, needs improvement or other solution
-         */
-        if (is_integer($data)) {
-            //Not sure
         }
 
         return $data;
@@ -76,7 +73,7 @@ class VariableEncryptor implements EncryptorInterface
 
             return trim(openssl_decrypt(
                 base64_decode($data),
-                self::ENCRYPT_METHOD,
+                $this->encryptMethod,
                 $this->secretKey,
                 0,
                 $this->initializationVector

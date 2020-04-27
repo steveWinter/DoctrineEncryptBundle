@@ -1,4 +1,4 @@
-#Usage
+# Usage
 
 Lets imagine that we are storing some private data in our database and we don't want 
 to somebody can see it even if he will get raw database on his hands in some dirty way. 
@@ -43,7 +43,7 @@ class User {
 ```
 
 It is as simple as that, the field will now be encrypted the first time the users entity gets edited.
-We keep an <ENC> prefix to check if data is encrypted or not so, unencrypted data will still work even if the field is encrypted.
+We use a suffix (<ENC>) to check if data is encrypted or not so, unencrypted data will still work even if the field is encrypted.
 
 ## Console commands
 

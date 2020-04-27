@@ -3,11 +3,14 @@
 namespace Ambta\DoctrineEncryptBundle\Encryptors;
 
 /**
- * Class for AES256 encryption
- * 
+ * Class for AES256 encryption.
+ *
  * @author Victor Melnik <melnikvictorl@gmail.com>
  */
-class AES256Encryptor implements EncryptorInterface {
+class AES256Encryptor implements EncryptorInterface
+{
+    const METHOD_NAME = 'AES-256';
+    const ENCRYPT_MODE = 'ECB';
 
     /**
      * @var string
@@ -17,42 +20,66 @@ class AES256Encryptor implements EncryptorInterface {
     /**
      * @var string
      */
+    private $suffix;
+
+    /**
+     * @var string
+     */
+    private $encryptMethod;
+
+    /**
+     * @var string
+     */
     private $initializationVector;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct($key) {
+    public function __construct($key, $suffix)
+    {
         $this->secretKey = md5($key);
-        $this->initializationVector = mcrypt_create_iv(
-            mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB),
-            MCRYPT_RAND
+        $this->suffix = $suffix;
+        $this->encryptMethod = sprintf('%s-%s', self::METHOD_NAME, self::ENCRYPT_MODE);
+        $this->initializationVector = openssl_random_pseudo_bytes(
+            openssl_cipher_iv_length($this->encryptMethod)
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function encrypt($data) {
-        return trim(base64_encode(mcrypt_encrypt(
-            MCRYPT_RIJNDAEL_256,
-            $this->secretKey,
-            $data,
-            MCRYPT_MODE_ECB,
-            $this->initializationVector
-        )));
+    public function encrypt($data)
+    {
+        if (is_string($data)) {
+            return trim(base64_encode(openssl_encrypt(
+                $data,
+                $this->encryptMethod,
+                $this->secretKey,
+                0,
+                $this->initializationVector
+            ))).$this->suffix;
+        }
+
+        return $data;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function decrypt($data) {
-        return trim(mcrypt_decrypt(
-            MCRYPT_RIJNDAEL_256,
-            $this->secretKey,
-            base64_decode($data),
-            MCRYPT_MODE_ECB,
-            $this->initializationVector
-        ));
+    public function decrypt($data)
+    {
+        if (is_string($data)) {
+            $data = str_replace($this->suffix, '', $data);
+
+            return trim(openssl_decrypt(
+                base64_decode($data),
+                $this->encryptMethod,
+                $this->secretKey,
+                0,
+                $this->initializationVector
+            ));
+        }
+
+        return $data;
     }
 }
