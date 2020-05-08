@@ -9,7 +9,7 @@ namespace Ambta\DoctrineEncryptBundle\Encryptors;
  */
 class VariableEncryptor implements EncryptorInterface
 {
-    const ENCRYPT_METHOD = 'AES-256-ECB';
+    const ENCRYPT_METHOD = 'aes-256-ecb';
 
     /**
      * @var string
