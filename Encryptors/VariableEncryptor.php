@@ -33,9 +33,7 @@ class VariableEncryptor implements EncryptorInterface
     {
         $this->secretKey = md5($key);
         $this->suffix = $suffix;
-        $this->initializationVector = openssl_random_pseudo_bytes(
-            openssl_cipher_iv_length(self::ENCRYPT_METHOD)
-        );
+        $this->initializationVector = false;
     }
 
     /**
